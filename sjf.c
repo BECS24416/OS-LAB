@@ -42,39 +42,8 @@ void calculate_SJF_NonPreemptive(struct process p[], int n) {
         }
     }
 }
-void calculate_SJF_Preemptive(struct process p[], int n) {
-    int completed = 0, currentTime = 0;
-    for (int i = 0; i < n; i++) {
-        p[i].remaining_BT = p[i].BT;
-    }
-    while (completed < n) {
-        int shortest = -1, minBT = INT_MAX;
-        for (int i = 0; i < n; i++) {
-            if (!p[i].completed && p[i].AT <= currentTime && p[i].remaining_BT < minBT) {
-                minBT = p[i].remaining_BT;
-                shortest = i;
-            }
-        }
 
-        if (shortest == -1) {
-            currentTime++;
-        } else {
-            if (p[shortest].remaining_BT == p[shortest].BT)
-                p[shortest].RT = currentTime - p[shortest].AT;
 
-            p[shortest].remaining_BT--;
-            currentTime++;
-
-            if (p[shortest].remaining_BT == 0) {
-                p[shortest].CT = currentTime;
-                p[shortest].TAT = p[shortest].CT - p[shortest].AT;
-                p[shortest].WT = p[shortest].TAT - p[shortest].BT;
-                p[shortest].completed = 1;
-                completed++;
-            }
-        }
-    }
-}
 void display(struct process p[], int n) {
     printf("\nProcess\tAT\tBT\tCT\tTAT\tWT\tRT\n");
     for (int i = 0; i < n; i++) {
@@ -97,7 +66,5 @@ int n;
     }
 calculate_SJF_NonPreemptive(p, n);
                 display(p, n);
-calculate_SJF_Preemptive(p, n);
-                display(p, n);
-                return 0;
+
 }
