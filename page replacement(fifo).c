@@ -1,7 +1,8 @@
 #include <stdio.h>
 
 int main() {
-    int frames, pages[50], n, frame[10], i, j, k, avail, count = 0;
+    int frames, pages[50], n, frame[10], time[10];
+    int i, j, k, avail, count = 0, current_time = 0, pos, lru_time;
 
     printf("Enter number of pages: ");
     scanf("%d", &n);
@@ -13,25 +14,38 @@ int main() {
     printf("Enter number of frames: ");
     scanf("%d", &frames);
 
-    for(i = 0; i < frames; i++)
+    for(i = 0; i < frames; i++) {
         frame[i] = -1;
+        time[i] = -1;
+    }
 
     printf("\nPage\tFrames\t\tPage Fault\n");
 
-    j = 0;
     for(i = 0; i < n; i++) {
         avail = 0;
+        current_time++;
 
-        for(k = 0; k < frames; k++) {
-            if(frame[k] == pages[i]) {
+        for(j = 0; j < frames; j++) {
+            if(frame[j] == pages[i]) {
                 avail = 1;
+                time[j] = current_time;
                 break;
             }
         }
 
         if(avail == 0) {
-            frame[j] = pages[i];
-            j = (j + 1) % frames;
+            pos = 0;
+            lru_time = time[0];
+
+            for(j = 1; j < frames; j++) {
+                if(time[j] < lru_time) {
+                    lru_time = time[j];
+                    pos = j;
+                }
+            }
+
+            frame[pos] = pages[i];
+            time[pos] = current_time;
             count++;
 
             printf("%d\t", pages[i]);
